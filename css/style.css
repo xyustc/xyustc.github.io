@@ -55,17 +55,79 @@ nav {
     position: fixed;
     width: 100%;
     z-index: 100;
-    background: rgba(10, 10, 20, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(35px) saturate(120%);
+    -webkit-backdrop-filter: blur(35px) saturate(120%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.01) 0%, 
+        rgba(255, 255, 255, 0.005) 50%, 
+        rgba(255, 255, 255, 0.002) 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(108, 99, 255, 0.5) 50%, 
+        transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+nav:hover::after {
+    opacity: 1;
 }
 
 .logo {
     font-size: 1.8rem;
     font-weight: 700;
-    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    background: linear-gradient(135deg, #ff7e5f, #feb47b, #6C63FF);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b, #6C63FF);
+    transition: width 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+.logo:hover::after {
+    width: 100%;
 }
 
 .nav-links {

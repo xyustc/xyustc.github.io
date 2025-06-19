@@ -93,9 +93,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener('scroll', () => {
     const nav = document.querySelector('nav');
     if (window.scrollY > 100) {
-        nav.style.background = 'rgba(10, 10, 20, 0.9)';
+        nav.style.background = 'rgba(255, 255, 255, 0.05)';
+        nav.style.backdropFilter = 'blur(40px) saturate(130%)';
+        nav.style.webkitBackdropFilter = 'blur(40px) saturate(130%)';
+        nav.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.15)';
+        nav.style.borderBottom = '1px solid rgba(255, 255, 255, 0.12)';
     } else {
-        nav.style.background = 'rgba(10, 10, 20, 0.7)';
+        nav.style.background = 'rgba(255, 255, 255, 0.03)';
+        nav.style.backdropFilter = 'blur(35px) saturate(120%)';
+        nav.style.webkitBackdropFilter = 'blur(35px) saturate(120%)';
+        nav.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.1)';
+        nav.style.borderBottom = '1px solid rgba(255, 255, 255, 0.08)';
     }
 });
 
