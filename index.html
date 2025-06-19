@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xingyu | 个人主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #4A44C6;
+            --dark: #121212;
+            --light: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 粒子背景 */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* 玻璃态卡片 */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* 导航栏 */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            background: rgba(10, 10, 20, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #feb47b;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 主区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .highlight {
+            background: linear-gradient(to right, #6C63FF, #4A44C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(to right, #6C63FF, #4A44C6);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        /* 内容区块 */
+        section {
+            padding: 5rem 10%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #6C63FF, #4A44C6);
+            border-radius: 2px;
+        }
+
+        /* 技能卡片 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .skill-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #6C63FF;
+        }
+
+        /* 项目展示 */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 5rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass);
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(to right, #6C63FF, #4A44C6);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            section {
+                padding: 3rem 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+    
+    <!-- 导航栏 -->
+    <nav>
+        <div class="logo">XINGYU</div>
+        <div class="nav-links">
+            <a href="#home">首页</a>
+            <a href="#about">关于</a>
+            <a href="#skills">技能</a>
+            <a href="#projects">项目</a>
+            <a href="#contact">联系</a>
+        </div>
+    </nav>
+
+    <!-- 主区域 -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Hi，我是<span class="highlight">星宇</span></h1>
+            <p>全栈开发者 | 技术爱好者 | 创新追求者</p>
+            <p>用代码构建世界，用创意点亮未来</p>
+            <a href="#projects" class="btn">查看我的作品</a>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about">
+        <h2 class="section-title">关于我</h2>
+        <div class="glass-card">
+            <p>👋 你好！我是星宇，一名充满激情的开发者。我热爱探索新技术，解决复杂问题，并创造有价值的数字体验。</p>
+            <br>
+            <p>🎓 拥有计算机科学背景，专注于Web开发和用户体验设计。我相信优秀的产品是美学与功能的完美结合。</p>
+            <br>
+            <p>🚀 在业余时间，我喜欢参与开源项目、撰写技术博客，以及探索AI和机器学习的可能性。</p>
+        </div>
+    </section>
+
+    <!-- 技能 -->
+    <section id="skills">
+        <h2 class="section-title">技术栈</h2>
+        <div class="skills-grid">
+            <div class="glass-card skill-card">
+                <i class="fab fa-js"></i>
+                <h3>语言</h3>
+                <p>Java, Python, Go</p>
+            </div>
+            <div class="glass-card skill-card">
+                <i class="fab fa-python"></i>
+                <h3>Web服务</h3>
+                <p>SpringBoot, Flask, 数据分析</p>
+            </div>
+            <div class="glass-card skill-card">
+                <i class="fas fa-cloud"></i>
+                <h3>云服务</h3>
+                <p>微服务, Docker</p>
+            </div>
+            <div class="glass-card skill-card">
+                <i class="fas fa-database"></i>
+                <h3>数据库</h3>
+                <p>MySQL, Redis, Hive</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目 -->
+    <section id="projects">
+        <h2 class="section-title">精选项目</h2>
+        <div class="projects-grid">
+            <div class="glass-card project-card">
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="项目1">
+                <div class="project-info">
+                    <h3>智能笔记系统</h3>
+                    <p>基于AI的笔记管理应用，支持自动分类和内容分析</p>
+                    <a href="#" class="btn">查看详情</a>
+                </div>
+            </div>
+            <div class="glass-card project-card">
+                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="项目2">
+                <div class="project-info">
+                    <h3>区块链投票平台</h3>
+                    <p>去中心化的安全投票系统，确保透明和不可篡改</p>
+                    <a href="#" class="btn">查看详情</a>
+                </div>
+            </div>
+            <div class="glass-card project-card">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="项目3">
+                <div class="project-info">
+                    <h3>数据可视化仪表盘</h3>
+                    <p>实时商业智能分析工具，支持多源数据集成</p>
+                    <a href="#" class="btn">查看详情</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系 -->
+    <section id="contact">
+        <h2 class="section-title">联系我</h2>
+        <div class="glass-card" style="text-align: center;">
+            <p>有项目合作的机会？欢迎随时联系！</p>
+            <br>
+            <p>📧 邮箱: xingyujafk@gmail.com</p>
+            <br>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-weixin"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2023 星宇的个人主页 | 由 GitHub Pages 强力驱动</p>
+        <p>❤️ 用代码创造美好世界</p>
+    </footer>
+
+    <!-- 粒子JS -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // 粒子背景配置
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#ffffff",
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out"
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "grab" },
+                    onclick: { enable: true, mode: "push" }
+                }
+            }
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
