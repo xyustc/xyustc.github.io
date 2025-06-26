@@ -3,66 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xingyu | 个人主页</title>
+    <title>Xingyu | 软件工程硕士 · AI编程研究者</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <!-- 粒子背景 -->
+<body class="page-content">    <!-- 粒子背景 -->
     <div id="particles-js"></div>
     
-    <!-- 导航栏 -->
-    <nav>
-        <a href="https://github.com/xyustc" target="_blank" class="logo">XINGYU</a>
-        <div class="nav-links">
-            <a href="#home">首页</a>
-            <a href="about.html">关于</a>
-            <a href="#skills">技能</a>
-            <a href="#projects">项目</a>
-            <a href="#contact">联系</a>
-        </div>
-    </nav>
-
     <!-- 主区域 -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1>Hi，我是<span class="highlight">XYU</span></h1>
-            <p>全栈开发者 | 技术爱好者 | 创新追求者</p>
-            <p>用代码构建世界，用创意点亮未来</p>
-            <a href="#projects" class="btn">查看我的作品</a>
+            <!-- 主标题区 -->            <div style="text-align: center; margin-bottom: 3rem;">                <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 1rem; background: linear-gradient(135deg, #64ffda, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Hi，我是<a href="https://github.com/xyustc" target="_blank" class="highlight" style="color: #64ffda; text-decoration: none; transition: all 0.3s ease; position: relative;" onmouseover="this.style.color='#ffffff'; this.style.textShadow='0 0 10px #64ffda'" onmouseout="this.style.color='#64ffda'; this.style.textShadow='none'"> Xingyu</a>
+                </h1>
+                
+                <!-- 身份标签 -->
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <span style="padding: 0.5rem 1rem; background: linear-gradient(135deg, rgba(100,255,218,0.2), rgba(100,255,218,0.1)); border: 1px solid rgba(100,255,218,0.3); border-radius: 20px; color: #64ffda; font-size: 0.95rem; font-weight: 500;">
+                        🎓 软件工程硕士在读
+                    </span>
+                    <span style="padding: 0.5rem 1rem; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(255,107,107,0.1)); border: 1px solid rgba(255,107,107,0.3); border-radius: 20px; color: #ff6b6b; font-size: 0.95rem; font-weight: 500;">
+                        💻 AI编程技术爱好者
+                    </span>
+                    <span style="padding: 0.5rem 1rem; background: linear-gradient(135deg, rgba(78,205,196,0.2), rgba(78,205,196,0.1)); border: 1px solid rgba(78,205,196,0.3); border-radius: 20px; color: #4ecdc4; font-size: 0.95rem; font-weight: 500;">
+                        🚀 创新学习者
+                    </span>
+                </div>
+                
+                <!-- 副标题描述 -->
+                <div style="max-width: 600px; margin: 0 auto 3rem;">
+                    <p style="font-size: 1.3rem; line-height: 1.6; color: #e0e0e0; margin-bottom: 1rem;">
+                        用代码探索世界，用学习拓展未来
+                    </p>
+                    <p style="font-size: 1.1rem; color: #888; line-height: 1.5;">
+                        🎯 专注AI编程研究 · 💡 追求技术创新 · 🌟 热爱开源分享
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 行动按钮区 -->
+            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                <a href="#skills" class="btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #64ffda, #4ecdc4); color: #0a0a0a; font-weight: 600; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(100,255,218,0.3);">
+                    <i class="fas fa-code"></i> 查看我的技能
+                </a>
+                <a href="about.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: transparent; border: 2px solid #ff6b6b; color: #ff6b6b; font-weight: 600; text-decoration: none; border-radius: 25px; transition: all 0.3s ease;">
+                    <i class="fas fa-user"></i> 了解更多
+                </a>
+            </div>
+            
+            <!-- 快速导航 -->
+            <div style="margin-top: 4rem; text-align: center;">
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+                    快速了解
+                </p>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <a href="#about" style="color: #888; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> 关于我
+                    </a>
+                    <a href="#skills" style="color: #888; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-cogs"></i> 技能栈
+                    </a>
+                    <a href="#contact" style="color: #888; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-envelope"></i> 联系我
+                    </a>
+                </div>
+            </div>
         </div>
-    </section>
-
-    <!-- 关于我 -->
+    </section><!-- 关于我 -->
     <section id="about">
         <h2 class="section-title">关于我</h2>
         <div class="glass-card">
-            <p>👋 你好！我是XYU，一名充满激情的开发者。我热爱探索新技术，解决复杂问题，并创造有价值的数字体验。</p>
-            <br>
-            <p>🎓 拥有计算机科学背景，专注于Web开发和用户体验设计。我相信优秀的产品是美学与功能的完美结合。</p>
-            <br>
-            <p>🚀 在业余时间，我喜欢参与开源项目、撰写技术博客，以及探索AI和机器学习的可能性。</p>
+            <div style="display: flex; align-items: center; gap: 3rem; flex-wrap: wrap;">
+                <!-- 左侧文字介绍 -->
+                <div style="flex: 1; min-width: 320px;">
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #64ffda; margin-bottom: 1rem; font-size: 1.3rem;">
+                            👋 你好！我是 <strong> Xingyu</strong>
+                        </h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 1.5rem; line-height: 1.6; color: #e0e0e0;">
+                            软件工程硕士在读，热爱编程，专注于学习前沿技术，积极参与项目实践
+                        </p>
+                        <p style="color: #888; margin-bottom: 2rem; line-height: 1.5;">
+                            🚀 探索AI编程的无限可能，用技术连接想象与现实
+                        </p>
+                    </div>
+                    <a href="about.html" class="btn" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user"></i> 了解更多关于我
+                    </a>
+                </div>
+                
+                <div style="flex: 0 0 auto; min-width: 280px;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; font-size: 0.9rem;">
+                        <div style="text-align: center; padding: 1.5rem 1rem; background: linear-gradient(135deg, rgba(100,255,218,0.1), rgba(100,255,218,0.05)); border: 1px solid rgba(100,255,218,0.2); border-radius: 12px;">
+                            <i class="fas fa-graduation-cap" style="font-size: 1.8rem; color: #64ffda; margin-bottom: 0.8rem; display: block;"></i>
+                            <div style="color: #64ffda; font-weight: bold; font-size: 1.1rem;">硕士</div>
+                            <div style="color: #ccc; font-size: 0.9rem;">二年级</div>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem 1rem; background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(255,107,107,0.05)); border: 1px solid rgba(255,107,107,0.2); border-radius: 12px;">
+                            <i class="fas fa-briefcase" style="font-size: 1.8rem; color: #ff6b6b; margin-bottom: 0.8rem; display: block;"></i>
+                            <div style="color: #ff6b6b; font-weight: bold; font-size: 1.1rem;">2段</div>
+                            <div style="color: #ccc; font-size: 0.9rem;">实习经验</div>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem 1rem; background: linear-gradient(135deg, rgba(78,205,196,0.1), rgba(78,205,196,0.05)); border: 1px solid rgba(78,205,196,0.2); border-radius: 12px;">
+                            <i class="fas fa-code" style="font-size: 1.8rem; color: #4ecdc4; margin-bottom: 0.8rem; display: block;"></i>
+                            <div style="color: #4ecdc4; font-weight: bold; font-size: 1.1rem;">4+</div>
+                            <div style="color: #ccc; font-size: 0.9rem;">编程语言</div>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem 1rem; background: linear-gradient(135deg, rgba(255,159,67,0.1), rgba(255,159,67,0.05)); border: 1px solid rgba(255,159,67,0.2); border-radius: 12px;">
+                            <i class="fas fa-heart" style="font-size: 1.8rem; color: #ff9f43; margin-bottom: 0.8rem; display: block;"></i>
+                            <div style="color: #ff9f43; font-weight: bold; font-size: 1.1rem;">∞</div>
+                            <div style="color: #ccc; font-size: 0.9rem;">学习热情</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- 技能 -->
     <section id="skills">
         <h2 class="section-title">技术栈</h2>
-        <div class="skills-grid">
-            <div class="glass-card skill-card">
-                <i class="fab fa-js"></i>
+        <div class="skills-grid">            <div class="glass-card skill-card">
+                <i class="fas fa-code"></i>
                 <h3>语言</h3>
-                <p>Java, Python, Go</p>
+                <p>Java, Python, Go ····</p>
             </div>
             <div class="glass-card skill-card">
-                <i class="fab fa-python"></i>
+                <i class="fas fa-server"></i>
                 <h3>Web服务</h3>
-                <p>SpringBoot, Flask, 数据分析</p>
+                <p>SpringBoot, Flask, Nginx, JS</p>
             </div>
             <div class="glass-card skill-card">
                 <i class="fas fa-cloud"></i>
                 <h3>云服务</h3>
-                <p>微服务, Docker</p>
+                <p>微服务, Docker, RPC</p>
             </div>
             <div class="glass-card skill-card">
                 <i class="fas fa-database"></i>
@@ -70,63 +144,44 @@
                 <p>MySQL, Redis, Hive</p>
             </div>
         </div>
-    </section>
-
-    <!-- 项目 -->
-    <section id="projects">
-        <h2 class="section-title">精选项目</h2>
-        <div class="projects-grid">
-            <div class="glass-card project-card">
-                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="项目1">
-                <div class="project-info">
-                    <h3>智能笔记系统</h3>
-                    <p>基于AI的笔记管理应用，支持自动分类和内容分析</p>
-                    <a href="#" class="btn">查看详情</a>
-                </div>
-            </div>
-            <div class="glass-card project-card">
-                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="项目2">
-                <div class="project-info">
-                    <h3>区块链投票平台</h3>
-                    <p>去中心化的安全投票系统，确保透明和不可篡改</p>
-                    <a href="#" class="btn">查看详情</a>
-                </div>
-            </div>
-            <div class="glass-card project-card">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="项目3">
-                <div class="project-info">
-                    <h3>数据可视化仪表盘</h3>
-                    <p>实时商业智能分析工具，支持多源数据集成</p>
-                    <a href="#" class="btn">查看详情</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 联系 -->
+    </section>    <!-- 联系 -->
     <section id="contact">
         <h2 class="section-title">联系我</h2>
-        <div class="glass-card" style="text-align: center;">
-            <p>有项目合作的机会？欢迎随时联系！</p>
-            <br>
-            <p>📧 邮箱: xingyujafk@gmail.com</p>
-            <br>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-weixin"></i></a>
+        <div class="glass-card" style="text-align: center; max-width: 600px; margin: 0 auto;">
+            <p style="font-size: 1.1rem; color: #e0e0e0; margin-bottom: 2rem;">
+                💬 有学术交流或技术合作机会？欢迎随时联系！
+            </p>            <!-- 主要联系方式 -->
+            <div style="display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem; flex-wrap: wrap;">                <div style="text-align: center;">
+                    <a href="#" id="emailBtn" style="color: #64ffda; text-decoration: none; display: block;">
+                        <i class="fas fa-envelope" style="font-size: 2rem; color: #64ffda; margin-bottom: 0.5rem; display: block;"></i>
+                        <p style="margin: 0; color: #64ffda; font-weight: 500;">
+                            xingyujafk@gmail.com
+                        </p>
+                    </a>
+                </div>
+                <div style="text-align: center;">
+                    <a href="https://github.com/xyustc" target="_blank" style="color: #ff6b6b; text-decoration: none; display: block;">
+                        <i class="fab fa-github" style="font-size: 2rem; color: #ff6b6b; margin-bottom: 0.5rem; display: block;"></i>
+                        <p style="margin: 0; color: #ff6b6b; font-weight: 500;">
+                            @xyustc
+                        </p>
+                    </a>
+                </div>
+            </div><!-- 其他平台 -->
+            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                <a href="#" onclick="alert('暂时没有提供QQ联系方式，请通过邮箱或GitHub联系我！'); return false;" style="color: #888; text-decoration: none; transition: color 0.3s;">
+                    <i class="fab fa-qq" style="font-size: 1.5rem;"></i>
+                </a>
+                <a href="#" onclick="alert('暂时没有提供微信联系方式，请通过邮箱或GitHub联系我！'); return false;" style="color: #888; text-decoration: none; transition: color 0.3s;">
+                    <i class="fab fa-weixin" style="font-size: 1.5rem;"></i>
+                </a>
             </div>
         </div>
-    </section>
-
-    <!-- 页脚 -->
+    </section>    <!-- 页脚 -->
     <footer>
-        <p>© 2025 XYU的个人主页 | 由 GitHub Pages 强力驱动</p>
+        <p>© 2025 Xingyu的个人主页 | 由 GitHub Pages 强力驱动</p>
         <p>❤️ 用代码创造美好世界</p>
-    </footer>
-
-    <!-- 粒子JS -->
+    </footer>    <!-- 粒子JS -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/main.js"></script>
 </body>

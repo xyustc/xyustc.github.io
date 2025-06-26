@@ -3,64 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>关于我 | Xingyu</title>
+    <title>关于我 | Xingyu · 软件工程硕士</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <!-- 粒子背景 -->
+<body class="page-content">    <!-- 粒子背景 -->
     <div id="particles-js"></div>
-    
-    <!-- 导航栏 -->
-    <nav>
-        <a href="https://github.com/xyustc" target="_blank" class="logo">XINGYU</a>
-        <div class="nav-links">
-            <a href="index.html">首页</a>
-            <a href="about.html">关于</a>
-            <a href="index.html#skills">技能</a>
-            <a href="index.html#projects">项目</a>
-            <a href="index.html#contact">联系</a>
+      <!-- 关于页面内容 -->
+    <section style="padding-top: 5rem;">
+        <!-- 返回首页按钮 -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a href="index.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #64ffda, #4ecdc4); color: #0a0a0a; font-weight: 600; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(100,255,218,0.3);">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
         </div>
-    </nav>
+        
+        <h1 class="section-title">关于Xingyu</h1>
+        <div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+            <!-- 个人简介 -->
+            <div style="text-align: center; margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(100,255,218,0.1), rgba(255,107,107,0.1)); border-radius: 15px;">
+                <h2 style="color: #64ffda; margin-bottom: 1rem;">🎯 我的目标</h2>
+                <p style="font-size: 1.1rem; line-height: 1.6; color: #e0e0e0;">
+                    致力于探索 <strong style="color: #64ffda;">AI与编程</strong> 的深度融合，通过 <strong style="color: #ff6b6b;">智能代码生成</strong> 和 <strong style="color: #4ecdc4;">AI辅助开发</strong> 技术<br>
+                    用AI的力量提升开发效率和代码质量。
+                </p>
+            </div>
 
-    <!-- 关于页面内容 -->
-    <section style="padding-top: 8rem;">
-        <h1 class="section-title">关于XYU</h1>
-        <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
-            <h2>🎯 我的使命</h2>
-            <p>致力于通过技术创新解决实际问题，为用户创造价值，推动数字化转型。</p>
-            <br>
-            
-            <h2>💼 工作经历</h2>
-            <ul style="margin-left: 2rem; line-height: 1.8;">
-                <li><strong>高级全栈开发工程师</strong> - 某科技公司 (2022-至今)</li>
-                <li><strong>后端开发工程师</strong> - 某互联网公司 (2020-2022)</li>
-                <li><strong>初级开发工程师</strong> - 某软件公司 (2018-2020)</li>
-            </ul>
-            <br>
-            
-            <h2>🎓 教育背景</h2>
-            <p><strong>计算机科学与技术学士</strong> - 某知名大学</p>
-            <p>主修课程：数据结构与算法、软件工程、数据库系统、计算机网络</p>
-            <br>
-            
-            <h2>🏆 成就与认证</h2>
-            <ul style="margin-left: 2rem; line-height: 1.8;">
-                <li>AWS 认证解决方案架构师</li>
-                <li>Oracle 认证 Java 开发者</li>
-                <li>Google Cloud Platform 认证</li>
-                <li>多个开源项目贡献者</li>
-            </ul>
-            <br>
-            
-            <h2>🎨 兴趣爱好</h2>
-            <p>摄影、阅读科技书籍、参与技术社区、马拉松、咖啡品鉴</p>
+            <!-- 教育背景 -->
+            <div style="margin-bottom: 3rem;">
+                <h2 style="color: #ff6b6b; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                    <i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>
+                    教育背景
+                </h2>
+                <div style="display: grid; gap: 1.5rem;">
+                    <div style="padding: 1.5rem; background: rgba(255,255,255,0.05); border-left: 4px solid #64ffda; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            <h3 style="color: #64ffda; margin: 0;"><strong>软件工程硕士在读</strong></h3>
+                            <span style="color: #888; font-size: 0.9rem;">2023 - 至今</span>
+                        </div>
+                        <p style="color: #4ecdc4; margin: 0.5rem 0;">中国科学技术大学</p>
+                        <p style="margin: 0; color: #ccc;">研究方向：后端开发工程 · AI编程提效</p>
+                    </div>
+                    <div style="padding: 1.5rem; background: rgba(255,255,255,0.05); border-left: 4px solid #ff6b6b; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            <h3 style="color: #ff6b6b; margin: 0;"><strong>软件工程学士</strong></h3>
+                            <span style="color: #888; font-size: 0.9rem;">2018 - 2022</span>
+                        </div>
+                        <p style="color: #4ecdc4; margin: 0.5rem 0;">大连理工大学</p>
+                        <p style="margin: 0; color: #ccc;">主修：编译原理 · 数据结构与算法 · 软件工程 · 计算机科学</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实习经历 -->
+            <div style="margin-bottom: 3rem;">
+                <h2 style="color: #4ecdc4; margin-bottom: 1.5rem; display: flex; align-items: center;">
+                    <i class="fas fa-briefcase" style="margin-right: 0.5rem;"></i>
+                    实习经历
+                </h2>
+                <div style="display: grid; gap: 1.5rem;">
+                    <div style="padding: 1.5rem; background: rgba(255,255,255,0.05); border-left: 4px solid #ff9f43; border-radius: 8px;">                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            <h3 style="color: #ff9f43; margin: 0;"><strong>美团 · 数据平台部</strong></h3>
+                            <span style="color: #888; font-size: 0.9rem;">2024.04 - 2024.07</span>
+                        </div>
+                        <p style="color: #64ffda; margin: 0.5rem 0;">后端开发 - Java、Python、全栈AiCoding探索</p>
+                        <p style="margin: 0; color: #ccc;">参与数据平台后端服务开发，优化数据处理流程和系统性能</p>
+                    </div>
+                    <div style="padding: 1.5rem; background: rgba(255,255,255,0.05); border-left: 4px solid #ff9f43; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            <h3 style="color: #ff9f43; margin: 0;"><strong>腾讯 · AI LAB</strong></h3>
+                            <span style="color: #888; font-size: 0.9rem;">2024.09 - 2025.03</span>
+                        </div>
+                        <p style="color: #64ffda; margin: 0.5rem 0;">后端开发 - Go、Python</p>
+                        <p style="margin: 0; color: #ccc;">负责AI编程工具开发与优化，探索大语言模型在代码生成中的应用</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 兴趣爱好 -->
+            <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, rgba(255,159,67,0.1), rgba(78,205,196,0.1)); border-radius: 15px;">
+                <h2 style="color: #ff9f43; margin-bottom: 1.5rem;">🎨 兴趣爱好</h2>                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
+                    <span style="padding: 0.5rem 1rem; background: rgba(100,255,218,0.2); border-radius: 20px; color: #64ffda;">📄 AI前沿论文</span>
+                    <span style="padding: 0.5rem 1rem; background: rgba(255,107,107,0.2); border-radius: 20px; color: #ff6b6b;">🛠️ 编程工具体验</span>
+                    <span style="padding: 0.5rem 1rem; background: rgba(78,205,196,0.2); border-radius: 20px; color: #4ecdc4;">💬 技术社区</span>
+                    <span style="padding: 0.5rem 1rem; background: rgba(255,159,67,0.2); border-radius: 20px; color: #ff9f43;">🔓 开源贡献</span>
+                    <span style="padding: 0.5rem 1rem; background: rgba(116,185,255,0.2); border-radius: 20px; color: #74b9ff;">📊 数据可视化</span>
+                </div>
+            </div>
         </div>
-    </section>
-
-    <!-- 页脚 -->
+    </section>    <!-- 页脚 -->
     <footer>
-        <p>© 2025 XYU的个人主页 | 由 GitHub Pages 强力驱动</p>
+        <p>© 2025 Xingyu的个人主页 | 由 GitHub Pages 强力驱动</p>
         <p>❤️ 用代码创造美好世界</p>
     </footer>
 

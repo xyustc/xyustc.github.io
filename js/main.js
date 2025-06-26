@@ -1,3 +1,93 @@
+// 页面切换动画功能
+class PageTransition {
+    constructor() {
+        this.isTransitioning = false;
+        this.init();
+    }
+
+    init() {
+        // 创建过渡遮罩层
+        this.createTransitionOverlay();
+        
+        // 绑定导航链接点击事件
+        this.bindNavigationEvents();
+        
+        // 页面加载完成后添加内容动画
+        this.initPageAnimation();
+    }    createTransitionOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'page-transition';
+        overlay.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-text">页面切换中</div>
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        this.overlay = overlay;
+    }
+
+    bindNavigationEvents() {
+        // 获取所有需要过渡的链接
+        const navLinks = document.querySelectorAll('.nav-links a[href*=".html"], a[href*=".html"]:not([target="_blank"])');
+          navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                
+                // 跳过当前页面链接和外部链接
+                if (href === window.location.pathname.split('/').pop() || 
+                    href.startsWith('http') || 
+                    link.hasAttribute('target')) {
+                    return;
+                }
+                
+                // 跳过锚点链接
+                if (href.startsWith('#')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                // 添加点击反馈
+                link.classList.add('transitioning');
+                
+                this.navigateWithTransition(href);
+            });
+        });
+    }
+
+    navigateWithTransition(url) {
+        if (this.isTransitioning) return;
+        
+        this.isTransitioning = true;
+        
+        // 显示过渡动画
+        this.overlay.classList.add('active');
+        
+        // 延迟跳转，让动画播放
+        setTimeout(() => {
+            window.location.href = url;
+        }, 250);
+    }    initPageAnimation() {
+        // 页面加载完成后移除过渡遮罩（如果存在）
+        window.addEventListener('load', () => {
+            const existingOverlay = document.querySelector('.page-transition.active');
+            if (existingOverlay) {
+                setTimeout(() => {
+                    existingOverlay.classList.remove('active');
+                }, 100);
+            }
+        });
+    }
+}
+
+// 初始化页面切换功能
+const pageTransition = new PageTransition();
+
 // 粒子背景配置
 particlesJS('particles-js', {
     particles: {
@@ -107,27 +197,6 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// 页面加载动画
-document.addEventListener('DOMContentLoaded', () => {
-    const heroContent = document.querySelector('.hero-content');
-    if (heroContent) {
-        heroContent.style.opacity = '0';
-        heroContent.style.transform = 'translateY(30px)';
-        
-        setTimeout(() => {
-            heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
-            heroContent.style.opacity = '1';
-            heroContent.style.transform = 'translateY(0)';
-        }, 500);
-    }
-    
-    // 启动交互效果
-    setTimeout(() => {
-        mouseParticles = new MouseFollowParticles();
-        initParticleInteraction();
-    }, 1000);
-});
-
 // 鼠标跟随粒子效果
 class MouseFollowParticles {
     constructor() {
@@ -170,19 +239,17 @@ class MouseFollowParticles {
     resize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-    }
-
-    addParticle() {
-        if (this.particles.length < 15) { // 减少粒子数量让尾迹更细腻
+    }    addParticle() {
+        if (this.particles.length < 10) { // 进一步减少粒子数量
             this.particles.push({
                 x: this.mouse.x,
                 y: this.mouse.y,
-                vx: (Math.random() - 0.5) * 1, // 减少随机速度
-                vy: (Math.random() - 0.5) * 1,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
                 life: 1,
-                decay: 0.03, // 稍快的衰减
-                size: Math.random() * 1.5 + 0.5, // 更小的粒子
-                color: `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.3})` // 白色半透明
+                decay: 0.04,
+                size: Math.random() * 1.2 + 0.4,
+                color: `rgba(255, 255, 255, ${Math.random() * 0.4 + 0.2})`
             });
         }
     }
@@ -201,22 +268,18 @@ class MouseFollowParticles {
                 this.particles.splice(i, 1);
             }
         }
-    }
-
-    drawParticles() {
+    }    drawParticles() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         this.particles.forEach(particle => {
-            this.ctx.save();
-            this.ctx.globalAlpha = particle.life * 0.8; // 更低的透明度
+            this.ctx.globalAlpha = particle.life * 0.6;
             this.ctx.fillStyle = particle.color;
-            this.ctx.shadowBlur = 3; // 减少发光效果
-            this.ctx.shadowColor = particle.color;
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
             this.ctx.fill();
-            this.ctx.restore();
         });
+        
+        this.ctx.globalAlpha = 1; // 重置透明度
     }
 
     animate() {
@@ -237,28 +300,6 @@ class MouseFollowParticles {
 
 // 初始化鼠标跟随粒子效果
 let mouseParticles;
-
-// 鼠标磁场效果 - 影响背景粒子
-let mousePosition = { x: 0, y: 0 };
-let isMouseMoving = false;
-let mouseTimer;
-
-document.addEventListener('mousemove', (e) => {
-    // 使用页面绝对坐标，不需要转换
-    mousePosition.x = e.clientX;
-    mousePosition.y = e.clientY;
-    isMouseMoving = true;
-    
-    // 清除之前的定时器
-    clearTimeout(mouseTimer);
-    
-    // 设置鼠标停止移动的检测
-    mouseTimer = setTimeout(() => {
-        isMouseMoving = false;
-    }, 100);
-    
-    // 不再创建涟漪效果，只依赖鼠标跟随粒子
-});
 
 // 简化的粒子交互系统
 function initParticleInteraction() {
@@ -298,5 +339,187 @@ function initParticleInteraction() {
         }
     }, 100);
 }
+
+// 页面加载时滚动到顶部功能
+function ensureScrollToTop() {
+    // 立即滚动到顶部，防止浏览器恢复滚动位置
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    
+    // 强制滚动到顶部
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // 确保在页面完全加载后再次滚动到顶部
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        }, 50);
+    });
+    
+    // 监听页面显示事件（包括前进/后退按钮）
+    window.addEventListener('pageshow', (event) => {
+        // 如果是从缓存中恢复的页面，也要滚动到顶部
+        if (event.persisted) {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        }
+    });
+}
+
+// 页面内容动画
+function initContentAnimations() {
+    // 为其他页面元素添加入场动画（排除hero-content，它在DOMContentLoaded中单独处理）
+    const animatedElements = document.querySelectorAll('.skills-grid, .contact-section, section:not(.hero)');
+    animatedElements.forEach((element, index) => {
+        if (element && element.style.opacity !== '1') {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, index * 100 + 300);
+        }
+    });
+}
+
+// 邮箱联系功能
+function initEmailContact() {
+    const emailBtn = document.getElementById('emailBtn');
+    if (emailBtn) {
+        emailBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showEmailModal();
+        });
+    }
+}
+
+// 显示邮箱联系模态框
+function showEmailModal() {
+    const email = 'xingyujafk@gmail.com';
+    const subject = '学术交流或技术合作';
+    
+    const options = [
+        { 
+            text: '📧 打开默认邮箱应用', 
+            action: () => window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}`)
+        },
+        { 
+            text: '📋 复制邮箱地址', 
+            action: () => {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(email).then(() => {
+                        showNotification('✅ 邮箱地址已复制到剪贴板！');
+                    }).catch(() => {
+                        showNotification('❌ 复制失败，请手动复制邮箱地址');
+                    });
+                } else {
+                    showNotification('❌ 浏览器不支持剪贴板功能');
+                }
+            }
+        },
+        { 
+            text: '🌐 打开 Gmail 网页版', 
+            action: () => window.open(`https://mail.google.com/mail/?view=cm&to=${email}&su=${encodeURIComponent(subject)}`, '_blank')
+        }
+    ];
+    
+    showEmailOptions(options);
+}
+
+// 显示邮箱选项弹窗
+function showEmailOptions(options) {
+    // 移除现有弹窗
+    const existing = document.querySelector('.email-modal');
+    if (existing) existing.remove();
+    
+    const modal = document.createElement('div');
+    modal.className = 'email-modal';
+    modal.innerHTML = `
+        <div class="email-modal-content">
+            <h3>选择联系方式</h3>
+            <div class="email-options">
+                ${options.map((option, index) => 
+                    `<button class="email-option-btn" data-index="${index}">${option.text}</button>`
+                ).join('')}
+            </div>
+            <button class="email-modal-close">取消</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // 绑定事件
+    modal.querySelectorAll('.email-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            options[index].action();
+            modal.remove();
+        });
+    });
+    
+    modal.querySelector('.email-modal-close').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+    
+    // 显示动画
+    setTimeout(() => modal.classList.add('show'), 10);
+}
+
+// 显示通知消息
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('show'), 10);
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
+}
+
+// 初始化所有功能
+document.addEventListener('DOMContentLoaded', () => {
+    // 确保页面从顶部开始
+    ensureScrollToTop();
+    
+    // 初始化内容动画
+    initContentAnimations();
+    
+    // 初始化邮箱联系功能
+    initEmailContact();
+    
+    // 初始化首页内容动画
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent) {
+        heroContent.style.opacity = '0';
+        heroContent.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
+            heroContent.style.opacity = '1';
+            heroContent.style.transform = 'translateY(0)';
+        }, 500);
+    }
+    
+    // 延迟启动交互效果
+    setTimeout(() => {
+        mouseParticles = new MouseFollowParticles();
+        initParticleInteraction();
+    }, 1000);
+});
+
+// 页面加载前就执行滚动到顶部
+ensureScrollToTop();
 
 
