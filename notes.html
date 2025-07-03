@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub在线笔记</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css"> <!-- Reusing existing style -->
+    <link rel="stylesheet" href="css/notes.css"> <!-- New specific style -->
+</head>
+<body class="page-content">
+    <div id="particles-js"></div>
+
+    <header class="notes-header">
+        <h1>GitHub 在线笔记</h1>
+        <div id="user-info" class="user-info" style="display: none;">
+            <img id="user-avatar" src="" alt="User Avatar">
+            <span id="user-name"></span>
+            <button id="logout-btn" class="btn-subtle"><i class="fas fa-sign-out-alt"></i> 退出</button>
+        </div>
+    </header>
+
+    <main id="main-content" class="notes-container">
+        <!-- 登录视图 -->
+        <div id="login-view">
+            <div class="glass-card" style="text-align: center;">
+                <h2>欢迎使用在线笔记</h2>
+                <p>请授权您的GitHub账户以开始使用。本应用将获取权限以读写您的仓库文件，用于保存笔记。</p>
+                <button id="login-btn" class="btn">
+                    <i class="fab fa-github"></i> 使用 GitHub 登录
+                </button>
+            </div>
+        </div>
+
+        <!-- 编辑器视图 -->
+        <div id="editor-view" style="display: none;">
+            <div class="editor-toolbar">
+                <span id="file-path"></span>
+                <div id="save-status"></div>
+                <button id="save-btn" class="btn">
+                    <i class="fas fa-save"></i> 保存笔记
+                </button>
+            </div>
+            <div class="editor-panels">
+                <textarea id="markdown-editor" placeholder="在这里输入Markdown..."></textarea>
+                <div id="html-preview" class="glass-card"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Xingyu的个人主页 | 由 GitHub Pages 强力驱动</p>
+    </footer>
+
+    <!-- JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- App Logic -->
+    <script src="js/notes.js"></script>
+</body>
+</html> 
