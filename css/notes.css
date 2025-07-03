@@ -273,4 +273,64 @@
 #html-preview pre code {
     display: block;
     padding: 1rem;
-} 
+}
+
+/* --- View Mode Controls --- */
+
+.editor-toolbar {
+    display: flex;
+    align-items: center; 
+    /* justify-content: space-between; is removed to allow controls to be in the middle */
+}
+
+.editor-view-controls {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1; /* Allows this to take up space and center the buttons */
+    gap: 0.5rem;
+}
+
+.view-control-btn {
+    background: none;
+    border: 1px solid #555;
+    color: #aaa;
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-control-btn:hover {
+    background: #444;
+    color: #fff;
+}
+
+.view-control-btn.active {
+    background: #64ffda;
+    color: #1a1a1a;
+    border-color: #64ffda;
+}
+
+/* --- View Mode Layouts --- */
+
+.editor-panels.view-mode-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.editor-panels.view-mode-edit #html-preview {
+    display: none;
+}
+
+.editor-panels.view-mode-edit #markdown-editor {
+    width: 100%;
+}
+
+.editor-panels.view-mode-preview #markdown-editor {
+    display: none;
+}
+
+.editor-panels.view-mode-preview #html-preview {
+    width: 100%;
+}

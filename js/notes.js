@@ -38,6 +38,11 @@ const dom = {
     saveStatus: document.getElementById('save-status'),
     markdownEditor: document.getElementById('markdown-editor'),
     htmlPreview: document.getElementById('html-preview'),
+    // View mode elements
+    editorPanels: document.querySelector('.editor-panels'),
+    viewModeEditBtn: document.getElementById('view-mode-edit'),
+    viewModeSplitBtn: document.getElementById('view-mode-split'),
+    viewModePreviewBtn: document.getElementById('view-mode-preview'),
 };
 
 /**
@@ -79,6 +84,36 @@ function setupEventListeners() {
         const markdownText = dom.markdownEditor.value;
         dom.htmlPreview.innerHTML = marked.parse(markdownText);
         showSaveStatus('未保存的更改...');
+    });
+    setupViewModeControls();
+}
+
+/**
+ * 设置视图模式控制按钮的事件监听器
+ */
+function setupViewModeControls() {
+    // Set initial state from HTML 'active' class
+    dom.editorPanels.classList.add('view-mode-split');
+
+    const buttons = [
+        { el: dom.viewModeEditBtn, mode: 'edit' },
+        { el: dom.viewModeSplitBtn, mode: 'split' },
+        { el: dom.viewModePreviewBtn, mode: 'preview' }
+    ];
+
+    buttons.forEach(buttonInfo => {
+        if (!buttonInfo.el) return; // Guard against null elements
+        buttonInfo.el.addEventListener('click', () => {
+            // Remove active class from all buttons
+            buttons.forEach(btn => btn.el.classList.remove('active'));
+            // Add active class to the clicked button
+            buttonInfo.el.classList.add('active');
+
+            // Remove all view mode classes from the panel
+            dom.editorPanels.classList.remove('view-mode-edit', 'view-mode-split', 'view-mode-preview');
+            // Add the selected view mode class
+            dom.editorPanels.classList.add(`view-mode-${buttonInfo.mode}`);
+        });
     });
 }
 
