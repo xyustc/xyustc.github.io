@@ -21,7 +21,7 @@
     </header>
 
     <main id="main-content" class="notes-container">
-        <!-- 登录视图 -->
+        <!-- 登录视图 (全屏) -->
         <div id="login-view">
             <div class="glass-card" style="text-align: center;">
                 <h2>欢迎使用在线笔记</h2>
@@ -32,19 +32,51 @@
             </div>
         </div>
 
-        <!-- 编辑器视图 -->
-        <div id="editor-view" style="display: none;">
-            <div class="editor-toolbar">
-                <span id="file-path"></span>
-                <div id="save-status"></div>
-                <button id="save-btn" class="btn">
-                    <i class="fas fa-save"></i> 保存笔记
-                </button>
-            </div>
-            <div class="editor-panels">
-                <textarea id="markdown-editor" placeholder="在这里输入Markdown..."></textarea>
-                <div id="html-preview" class="glass-card"></div>
-            </div>
+        <!-- 主工作区 (登录后显示) -->
+        <div id="workspace-view" class="workspace-container" style="display: none;">
+            
+            <!-- 左侧文件导航器 -->
+            <aside id="file-navigator" class="file-navigator">
+                <div class="navigator-header">
+                    <h4>笔记目录</h4>
+                    <div class="actions">
+                        <button id="new-note-btn" class="action-btn" title="新建笔记"><i class="fas fa-file-alt"></i></button>
+                        <button id="new-folder-btn" class="action-btn" title="新建文件夹"><i class="fas fa-folder-plus"></i></button>
+                    </div>
+                </div>
+                <div id="file-tree" class="file-tree">
+                    <!-- 文件树将通过JS动态生成 -->
+                </div>
+            </aside>
+
+            <!-- 右侧编辑器/欢迎区 -->
+            <section id="editor-container" class="editor-container">
+                
+                <!-- 欢迎视图 -->
+                <div id="welcome-view" class="welcome-view">
+                    <div class="glass-card" style="text-align: center;">
+                        <i class="fas fa-book-reader" style="font-size: 3rem; color: #64ffda; margin-bottom: 1rem;"></i>
+                        <h2>开始你的创作</h2>
+                        <p>从左侧选择一个笔记开始编辑，或者创建一个新的笔记或文件夹。</p>
+                    </div>
+                </div>
+
+                <!-- 编辑器视图 -->
+                <div id="editor-view" style="display: none;">
+                    <div class="editor-toolbar">
+                        <span id="file-path"></span>
+                        <div id="save-status"></div>
+                        <button id="save-btn" class="btn">
+                            <i class="fas fa-save"></i> 保存笔记
+                        </button>
+                    </div>
+                    <div class="editor-panels">
+                        <textarea id="markdown-editor" placeholder="在这里输入Markdown..."></textarea>
+                        <div id="html-preview" class="glass-card"></div>
+                    </div>
+                </div>
+
+            </section>
         </div>
     </main>
 

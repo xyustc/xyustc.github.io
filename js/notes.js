@@ -15,14 +15,22 @@ const config = {
 
 // 全局变量来存储笔记文件的最新SHA值，用于更新
 let currentFileSha = null;
+let currentFilePath = null;
 
 // DOM元素引用
 const dom = {
     loginView: document.getElementById('login-view'),
+    workspaceView: document.getElementById('workspace-view'),
+    fileNavigator: document.getElementById('file-navigator'),
+    fileTree: document.getElementById('file-tree'),
+    editorContainer: document.getElementById('editor-container'),
+    welcomeView: document.getElementById('welcome-view'),
     editorView: document.getElementById('editor-view'),
     loginBtn: document.getElementById('login-btn'),
     logoutBtn: document.getElementById('logout-btn'),
     saveBtn: document.getElementById('save-btn'),
+    newNoteBtn: document.getElementById('new-note-btn'),
+    newFolderBtn: document.getElementById('new-folder-btn'),
     userInfo: document.getElementById('user-info'),
     userAvatar: document.getElementById('user-avatar'),
     userName: document.getElementById('user-name'),
@@ -65,6 +73,8 @@ function setupEventListeners() {
     dom.loginBtn.addEventListener('click', redirectToGitHubAuth);
     dom.logoutBtn.addEventListener('click', logout);
     dom.saveBtn.addEventListener('click', saveNote);
+    dom.newNoteBtn.addEventListener('click', createNewNote);
+    dom.newFolderBtn.addEventListener('click', createNewFolder);
     dom.markdownEditor.addEventListener('input', () => {
         const markdownText = dom.markdownEditor.value;
         dom.htmlPreview.innerHTML = marked.parse(markdownText);
@@ -79,8 +89,8 @@ function setupEventListeners() {
 async function handleAuthenticatedUser(token) {
     const userData = await getGitHubUser(token);
     if (userData) {
-        showEditorView(userData);
-        await loadNoteContent(token);
+        showWorkspaceView(userData);
+        await loadAndRenderFileTree(token);
     } else {
         // Token无效或已过期
         logout();
@@ -171,22 +181,173 @@ async function getGitHubUser(token) {
 }
 
 /**
- * 加载笔记内容
+ * 加载并渲染文件树
  * @param {string} token 
  */
-async function loadNoteContent(token) {
-    const url = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/${config.notePath}`;
+async function loadAndRenderFileTree(token) {
     try {
+        // 1. 获取根目录内容，找到 'notes' 文件夹的 SHA
+        const rootContentsUrl = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/`;
+        const rootResponse = await fetch(rootContentsUrl, { headers: { 'Authorization': `token ${token}` } });
+        if (!rootResponse.ok) throw new Error('无法获取仓库根目录。');
+        const rootContents = await rootResponse.json();
+        const notesDir = rootContents.find(item => item.name === 'notes' && item.type === 'dir');
+
+        if (!notesDir) {
+            dom.fileTree.innerHTML = '<li>"notes" 文件夹不存在！</li>';
+            // 可以在这里添加一个按钮来创建'notes'文件夹
+            return;
+        }
+
+        // 2. 使用 'notes' 文件夹的 SHA 递归获取树
+        const treeUrl = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/git/trees/${notesDir.sha}?recursive=true`;
+        const treeResponse = await fetch(treeUrl, { headers: { 'Authorization': `token ${token}` } });
+        if (!treeResponse.ok) throw new Error('无法获取文件树。');
+        const treeData = await treeResponse.json();
+        
+        // 3. 构建层级数据结构
+        const fileTree = buildTree(treeData.tree);
+
+        // 4. 渲染UI
+        renderTree(fileTree, dom.fileTree);
+
+    } catch (error) {
+        console.error("加载文件树失败:", error);
+        dom.fileTree.innerHTML = `<li>加载目录失败: ${error.message}</li>`;
+    }
+}
+
+/**
+ * 将GitHub API返回的扁平路径列表转换为层级树结构
+ * @param {Array} pathList - from GitHub trees API
+ * @returns {Array}
+ */
+function buildTree(pathList) {
+    const tree = [];
+    const map = {}; // 用于快速查找已创建的节点
+
+    pathList.forEach(item => {
+        const parts = item.path.split('/');
+        let currentLevel = tree;
+        let currentPath = '';
+
+        parts.forEach((part, index) => {
+            currentPath = currentPath ? `${currentPath}/${part}` : part;
+            
+            if (!map[currentPath]) {
+                const newNode = {
+                    name: part,
+                    type: item.type === 'tree' ? 'folder' : 'file',
+                    path: item.path,
+                    children: item.type === 'tree' ? [] : undefined
+                };
+
+                map[currentPath] = newNode;
+                
+                if (index === 0) {
+                    // 顶级节点
+                    tree.push(newNode);
+                } else {
+                    const parentPath = parts.slice(0, index).join('/');
+                    if (map[parentPath]) {
+                        map[parentPath].children.push(newNode);
+                    }
+                }
+            }
+            if (map[currentPath] && item.type === 'tree') {
+                currentLevel = map[currentPath].children;
+            }
+        });
+    });
+
+    return tree;
+}
+
+/**
+ * 递归地将文件树JSON对象渲染为HTML
+ * @param {Array} nodes - The array of nodes to render
+ * @param {HTMLElement} parentElement - The element to append the rendered tree to
+ */
+function renderTree(nodes, parentElement) {
+    parentElement.innerHTML = ''; // Clear previous tree
+    const ul = document.createElement('ul');
+    
+    // Sort so folders come before files
+    nodes.sort((a, b) => {
+        if (a.type === 'folder' && b.type === 'file') return -1;
+        if (a.type === 'file' && b.type === 'folder') return 1;
+        return a.name.localeCompare(b.name);
+    });
+
+    nodes.forEach(node => {
+        if (node.name === '.gitkeep') return;
+
+        const li = document.createElement('li');
+        li.dataset.path = node.path;
+        li.dataset.type = node.type;
+
+        const icon = document.createElement('i');
+        icon.className = `icon fas ${node.type === 'folder' ? 'fa-folder' : 'fa-file-alt'}`;
+        li.appendChild(icon);
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = node.name;
+        li.appendChild(nameSpan);
+
+        if (node.type === 'folder') {
+            const childrenUl = document.createElement('ul');
+            childrenUl.style.display = 'none';
+            renderTree(node.children, childrenUl); // Recursive call
+            li.appendChild(childrenUl);
+
+            li.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isVisible = childrenUl.style.display !== 'none';
+                childrenUl.style.display = isVisible ? 'none' : 'block';
+                icon.className = `icon fas ${isVisible ? 'fa-folder' : 'fa-folder-open'}`;
+            });
+        } else { // It's a file
+            li.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Handle active state for UI
+                const currentActive = parentElement.querySelector('li.active');
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                }
+                li.classList.add('active');
+
+                const token = localStorage.getItem('github_access_token');
+                const relativePath = `notes/${node.path}`;
+                loadNoteContent(token, relativePath);
+            });
+        }
+        ul.appendChild(li);
+    });
+
+    parentElement.appendChild(ul);
+}
+
+/**
+ * 加载笔记内容
+ * @param {string} token 
+ * @param {string} path - The full path to the note file from repo root
+ */
+async function loadNoteContent(token, path) {
+    currentFilePath = path; // <-- 追踪当前文件路径
+    const url = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/${path}`;
+    try {
+        showEditorView(); // Show the editor pane first
         showSaveStatus('正在加载笔记...');
+        dom.filePath.textContent = path; // Update file path in toolbar
+
         const response = await fetch(url, {
             headers: { 'Authorization': `token ${token}` }
         });
 
         if (response.status === 404) {
-            // 文件不存在，准备创建新文件
-            dom.markdownEditor.value = `# 新的笔记\n\n这是在 ${config.notePath} 创建的一个新文件。`;
+            dom.markdownEditor.value = `# 新的笔记\n\n这是在 ${path} 创建的一个新文件。`;
             dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
-            currentFileSha = null; // 确保SHA是null，这样保存时会是创建操作
+            currentFileSha = null;
             showSaveStatus('文件不存在，准备创建。');
             return;
         }
@@ -196,9 +357,8 @@ async function loadNoteContent(token) {
         }
 
         const data = await response.json();
-        // GitHub API返回的内容是Base64编码的，需要解码
         const content = decodeURIComponent(escape(atob(data.content)));
-        currentFileSha = data.sha; // 保存SHA值以备更新
+        currentFileSha = data.sha;
         
         dom.markdownEditor.value = content;
         dom.htmlPreview.innerHTML = marked.parse(content);
@@ -220,12 +380,15 @@ async function saveNote() {
         logout();
         return;
     }
+    if (!currentFilePath) {
+        alert('没有打开任何文件，无法保存。');
+        return;
+    }
 
     const content = dom.markdownEditor.value;
-    // 内容需要编码为Base64
     const encodedContent = btoa(unescape(encodeURIComponent(content)));
 
-    const url = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/${config.notePath}`;
+    const url = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/${currentFilePath}`;
     
     const body = {
         message: `docs: update note ${new Date().toISOString()}`,
@@ -270,17 +433,27 @@ function logout() {
  */
 function showLoginView() {
     dom.loginView.style.display = 'block';
-    dom.editorView.style.display = 'none';
+    dom.workspaceView.style.display = 'none';
     dom.userInfo.style.display = 'none';
 }
 
-function showEditorView(userData) {
+function showWorkspaceView(userData) {
     dom.loginView.style.display = 'none';
-    dom.editorView.style.display = 'block';
+    dom.workspaceView.style.display = 'grid';
     dom.userInfo.style.display = 'flex';
     dom.userAvatar.src = userData.avatar_url;
     dom.userName.textContent = userData.login;
-    dom.filePath.textContent = `${config.repoOwner}/${config.repoName}/${config.notePath}`;
+    showWelcomeView();
+}
+
+function showWelcomeView() {
+    dom.welcomeView.style.display = 'flex';
+    dom.editorView.style.display = 'none';
+}
+
+function showEditorView() {
+    dom.welcomeView.style.display = 'none';
+    dom.editorView.style.display = 'block';
 }
 
 function showSaveStatus(message) {
@@ -301,5 +474,103 @@ function initializeParticles() {
         particlesJS('particles-js', {
             "particles": { "number": { "value": 80, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#ffffff" }, "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 } }, "opacity": { "value": 0.5, "random": false, "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } }, "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 6, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }, "modes": { "grab": { "distance": 400, "line_linked": { "opacity": 1 } }, "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 }, "repulse": { "distance": 200, "duration": 0.4 }, "push": { "particles_nb": 4 }, "remove": { "particles_nb": 2 } } }, "retina_detect": true
         });
+    }
+}
+
+/**
+ * 创建新笔记
+ */
+async function createNewNote() {
+    const fileName = prompt("请输入新笔记的文件名 (例如: my-note.md):");
+    if (!fileName || !fileName.endsWith('.md')) {
+        alert("无效的文件名。必须以 .md 结尾。");
+        return;
+    }
+
+    // 假设新笔记创建在 'notes' 根目录下，可以后续增强为在当前选中目录下创建
+    const path = `notes/${fileName}`;
+    const token = localStorage.getItem('github_access_token');
+
+    const content = `# ${fileName}\n\n`;
+    const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+    const url = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/${path}`;
+
+    try {
+        showSaveStatus(`正在创建新笔记 ${fileName}...`);
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+            },
+            body: JSON.stringify({
+                message: `feat: create note ${fileName}`,
+                content: encodedContent
+                // sha为空，表示创建
+            })
+        });
+
+        if (response.status === 422) {
+             throw new Error(`文件 "${fileName}" 已存在。`);
+        }
+        if (!response.ok) {
+            throw new Error(`创建失败: ${response.statusText}`);
+        }
+        
+        showSaveStatus(`笔记 ${fileName} 创建成功！`);
+        // 重新加载文件树以显示新文件
+        await loadAndRenderFileTree(token);
+
+    } catch (error) {
+        console.error(error);
+        showSaveStatus(`错误: ${error.message}`);
+        alert(`错误: ${error.message}`);
+    }
+}
+
+/**
+ * 创建新文件夹
+ */
+async function createNewFolder() {
+    const folderName = prompt("请输入新文件夹的名称:");
+    if (!folderName) return;
+
+    // 使用 .gitkeep 技巧创建文件夹
+    const path = `notes/${folderName}/.gitkeep`;
+    const token = localStorage.getItem('github_access_token');
+
+    const encodedContent = btoa(""); // 空内容
+
+    const url = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/${path}`;
+
+    try {
+        showSaveStatus(`正在创建文件夹 ${folderName}...`);
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+            },
+            body: JSON.stringify({
+                message: `feat: create folder ${folderName}`,
+                content: encodedContent
+            })
+        });
+        
+        if (response.status === 422) {
+             throw new Error(`文件夹或文件 "${folderName}" 已存在。`);
+        }
+        if (!response.ok) {
+            throw new Error(`创建失败: ${response.statusText}`);
+        }
+        
+        showSaveStatus(`文件夹 ${folderName} 创建成功！`);
+        await loadAndRenderFileTree(token);
+
+    } catch (error) {
+        console.error(error);
+        showSaveStatus(`错误: ${error.message}`);
+        alert(`错误: ${error.message}`);
     }
 }

@@ -51,11 +51,123 @@
 }
 
 .notes-container {
-    max-width: 1200px;
+    max-width: 95%;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
     position: relative;
     z-index: 5;
+}
+
+/* New Workspace Layout */
+.workspace-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    height: 80vh;
+}
+
+/* File Navigator (Left Sidebar) */
+.file-navigator {
+    background: rgba(26, 26, 26, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.navigator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #444;
+    margin-bottom: 1rem;
+}
+
+.navigator-header h4 {
+    margin: 0;
+    color: #e0e0e0;
+}
+
+.navigator-header .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    background: none;
+    border: 1px solid #666;
+    color: #ccc;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: #64ffda;
+    color: #1a1a1a;
+    border-color: #64ffda;
+}
+
+.file-tree {
+    flex-grow: 1;
+}
+
+.file-tree ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.file-tree li {
+    padding: 0.4rem 0.2rem;
+    cursor: pointer;
+    color: #ccc;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-tree li:hover {
+    background-color: rgba(100, 255, 218, 0.1);
+}
+
+.file-tree li.active {
+    background-color: #64ffda;
+    color: #1a1a1a;
+}
+
+.file-tree .icon {
+    width: 20px;
+    text-align: center;
+}
+
+/* Editor Container (Right Side) */
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.welcome-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.welcome-view .glass-card {
+    padding: 3rem;
+}
+
+/* Adjustments for existing editor view */
+#editor-view {
+    height: 100%;
 }
 
 #login-view .glass-card {
@@ -88,12 +200,6 @@
     box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
     border: none;
     font-size: 1.1rem;
-}
-
-#editor-view {
-    display: flex;
-    flex-direction: column;
-    height: 75vh;
 }
 
 .editor-toolbar {
