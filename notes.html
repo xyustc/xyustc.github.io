@@ -13,6 +13,9 @@
 
     <header class="notes-header">
         <h1>GitHub 在线笔记</h1>
+        <button id="login-btn" class="btn" style="display: none;">
+            <i class="fab fa-github"></i> 使用 GitHub 登录以编辑
+        </button>
         <div id="user-info" class="user-info" style="display: none;">
             <img id="user-avatar" src="" alt="User Avatar">
             <span id="user-name"></span>
@@ -21,17 +24,6 @@
     </header>
 
     <main id="main-content" class="notes-container">
-        <!-- 登录视图 (全屏) -->
-        <div id="login-view">
-            <div class="glass-card" style="text-align: center;">
-                <h2>欢迎使用在线笔记</h2>
-                <p>请授权您的GitHub账户以开始使用。本应用将获取权限以读写您的仓库文件，用于保存笔记。</p>
-                <button id="login-btn" class="btn">
-                    <i class="fab fa-github"></i> 使用 GitHub 登录
-                </button>
-            </div>
-        </div>
-
         <!-- 主工作区 (登录后显示) -->
         <div id="workspace-view" class="workspace-container" style="display: none;">
             
