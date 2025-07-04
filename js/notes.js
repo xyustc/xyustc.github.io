@@ -10,6 +10,7 @@ const config = {
 
 let currentFileSha = null;
 let currentFilePath = null;
+const md = window.markdownit();
 
 const dom = {
     loginBtn: document.getElementById('login-btn'),
@@ -32,10 +33,10 @@ const dom = {
     markdownEditor: document.getElementById('markdown-editor'),
     htmlPreview: document.getElementById('html-preview'),
     editorPanels: document.querySelector('.editor-panels'),
-    viewModeEditBtn: document.getElementById('view-mode-edit'),
-    viewModeSplitBtn: document.getElementById('view-mode-split'),
-    viewModePreviewBtn: document.getElementById('view-mode-preview'),
+    toggleViewBtn: document.getElementById('toggle-view-btn'),
 };
+
+let isEditMode = false; // false: preview, true: split/edit
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
@@ -60,27 +61,38 @@ function setupEventListeners() {
     dom.newNoteBtn.addEventListener('click', createNewNote);
     dom.newFolderBtn.addEventListener('click', createNewFolder);
     dom.markdownEditor.addEventListener('input', () => {
-        if(marked) dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
+        if(md && DOMPurify) dom.htmlPreview.innerHTML = DOMPurify.sanitize(md.render(dom.markdownEditor.value));
         showSaveStatus('未保存的更改...');
     });
 }
 
 function setupViewModeControls() {
-    if (!dom.editorPanels) return;
-    dom.editorPanels.classList.add('view-mode-split');
-    const buttons = [
-        { el: dom.viewModeEditBtn, mode: 'edit' },
-        { el: dom.viewModeSplitBtn, mode: 'split' },
-        { el: dom.viewModePreviewBtn, mode: 'preview' }
-    ];
-    buttons.forEach(buttonInfo => {
-        if (!buttonInfo.el) return;
-        buttonInfo.el.addEventListener('click', () => {
-            buttons.forEach(btn => btn.el.classList.remove('active'));
-            buttonInfo.el.classList.add('active');
-            dom.editorPanels.classList.remove('view-mode-edit', 'view-mode-split', 'view-mode-preview');
-            dom.editorPanels.classList.add(`view-mode-${buttonInfo.mode}`);
-        });
+    if (!dom.editorPanels || !dom.toggleViewBtn) return;
+
+    const updateViewState = () => {
+        dom.editorPanels.classList.remove('view-mode-preview', 'view-mode-split');
+        const icon = dom.toggleViewBtn.querySelector('i');
+        
+        if (isEditMode) {
+            // 我们在编辑模式下，显示分栏
+            dom.editorPanels.classList.add('view-mode-split');
+            icon.className = 'fas fa-eye';
+            dom.toggleViewBtn.title = '切换到预览';
+        } else {
+            // 我们在预览模式下
+            dom.editorPanels.classList.add('view-mode-preview');
+            icon.className = 'fas fa-pencil-alt';
+            dom.toggleViewBtn.title = '切换到编辑';
+        }
+    };
+
+    // 设置初始状态为预览
+    isEditMode = false;
+    updateViewState();
+
+    dom.toggleViewBtn.addEventListener('click', () => {
+        isEditMode = !isEditMode;
+        updateViewState();
     });
 }
 
@@ -105,7 +117,6 @@ async function enterReadOnlyMode() {
     dom.newFolderBtn.style.display = 'none';
     dom.saveBtn.style.display = 'none';
     dom.markdownEditor.setAttribute('readonly', true);
-    if(dom.editorToolbar) dom.editorToolbar.style.display = 'none';
     showWelcomeView();
     await loadAndRenderFileTree(null);
 }
@@ -283,8 +294,9 @@ async function loadNoteContent(token, path) {
         dom.filePath.textContent = path;
         const response = await githubApiRequest(url, token);
         if (response.status === 404) {
-            dom.markdownEditor.value = `# 新的笔记\n\n这是在 ${path} 创建的一个新文件。`;
-            if(marked) dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
+            const newFileContent = `# 新的笔记\n\n这是在 ${path} 创建的一个新文件。`;
+            dom.markdownEditor.value = newFileContent;
+            if(md && DOMPurify) dom.htmlPreview.innerHTML = DOMPurify.sanitize(md.render(newFileContent));
             currentFileSha = null;
             showSaveStatus('文件不存在，准备创建。');
             return;
@@ -294,7 +306,7 @@ async function loadNoteContent(token, path) {
         const content = decodeURIComponent(escape(atob(data.content)));
         currentFileSha = data.sha;
         dom.markdownEditor.value = content;
-        if(marked) dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
+        if(md && DOMPurify) dom.htmlPreview.innerHTML = DOMPurify.sanitize(md.render(content));
         showSaveStatus('笔记加载成功！');
     } catch (error) {
         showSaveStatus(`错误: ${error.message}`);

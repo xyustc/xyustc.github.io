@@ -56,22 +56,22 @@
                 <!-- 编辑器视图 -->
                 <div id="editor-view" style="display: none;">
                     <div class="editor-toolbar">
-                        <span id="file-path"></span>
-                        <div class="editor-view-controls">
-                            <button id="view-mode-edit" class="view-control-btn" title="仅显示编辑器">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                            <button id="view-mode-split" class="view-control-btn active" title="分栏视图">
-                                <i class="fas fa-columns"></i>
-                            </button>
-                            <button id="view-mode-preview" class="view-control-btn" title="仅显示预览">
-                                <i class="fas fa-eye"></i>
+                        <div class="toolbar-left">
+                            <span id="file-path"></span>
+                        </div>
+                        <div class="toolbar-center">
+                            <div class="editor-view-controls">
+                                <button id="toggle-view-btn" class="view-control-btn" title="切换编辑/预览">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <div id="save-status"></div>
+                            <button id="save-btn" class="btn">
+                                <i class="fas fa-save"></i> 保存笔记
                             </button>
                         </div>
-                        <div id="save-status"></div>
-                        <button id="save-btn" class="btn">
-                            <i class="fas fa-save"></i> 保存笔记
-                        </button>
                     </div>
                     <div class="editor-panels">
                         <textarea id="markdown-editor" placeholder="在这里输入Markdown..."></textarea>
@@ -88,7 +88,8 @@
     </footer>
 
     <!-- JS Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
     <!-- App Logic -->
