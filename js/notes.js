@@ -1,10 +1,10 @@
-// js/notes.js
+// js/notes.js (Final Corrected Version)
 
 const config = {
     clientId: 'Ov23liM8SUwOMiIlF1T0',
     repoOwner: 'xyustc',
     repoName: 'xyustc.github.io',
-    notePath: 'notes/diary.md',
+    notePath: 'notes/diary.md', // This is now a default/fallback
     authProxyUrl: 'https://xyustc-github-io.vercel.app/api/github-callback'
 };
 
@@ -38,7 +38,6 @@ const dom = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('DOM内容已加载，开始执行主逻辑。');
     setupEventListeners();
     setupViewModeControls();
     initializeParticles();
@@ -48,10 +47,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (code) {
         await handleGitHubCallback(code);
     } else if (accessToken) {
-        console.log('检测到token，进入编辑模式。');
         await enterEditMode(accessToken);
     } else {
-        console.log('无token，进入只读模式。');
         await enterReadOnlyMode();
     }
 });
@@ -63,12 +60,13 @@ function setupEventListeners() {
     dom.newNoteBtn.addEventListener('click', createNewNote);
     dom.newFolderBtn.addEventListener('click', createNewFolder);
     dom.markdownEditor.addEventListener('input', () => {
-        dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
+        if(marked) dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
         showSaveStatus('未保存的更改...');
     });
 }
 
 function setupViewModeControls() {
+    if (!dom.editorPanels) return;
     dom.editorPanels.classList.add('view-mode-split');
     const buttons = [
         { el: dom.viewModeEditBtn, mode: 'edit' },
@@ -94,6 +92,9 @@ async function githubApiRequest(url, token, options = {}) {
     if (token) {
         headers['Authorization'] = `token ${token}`;
     }
+    if (options.body) {
+        headers['Content-Type'] = 'application/json';
+    }
     return fetch(url, { ...options, headers });
 }
 
@@ -104,7 +105,7 @@ async function enterReadOnlyMode() {
     dom.newFolderBtn.style.display = 'none';
     dom.saveBtn.style.display = 'none';
     dom.markdownEditor.setAttribute('readonly', true);
-    if(dom.editorToolbar) dom.editorToolbar.querySelector('.editor-view-controls').style.visibility = 'visible';
+    if(dom.editorToolbar) dom.editorToolbar.style.display = 'none';
     showWelcomeView();
     await loadAndRenderFileTree(null);
 }
@@ -112,7 +113,6 @@ async function enterReadOnlyMode() {
 async function enterEditMode(token) {
     const userData = await getGitHubUser(token);
     if (!userData) {
-        console.error("Token无效，登出并切换到只读模式。");
         logout();
         return;
     }
@@ -120,10 +120,13 @@ async function enterEditMode(token) {
     dom.userInfo.style.display = 'flex';
     dom.userAvatar.src = userData.avatar_url;
     dom.userName.textContent = userData.login;
+    
     dom.newNoteBtn.style.display = 'block';
     dom.newFolderBtn.style.display = 'block';
     dom.saveBtn.style.display = 'block';
     dom.markdownEditor.removeAttribute('readonly');
+    if(dom.editorToolbar) dom.editorToolbar.style.display = 'flex';
+    
     await loadAndRenderFileTree(token);
 }
 
@@ -138,6 +141,13 @@ async function handleGitHubCallback(code) {
         showSaveStatus(`验证失败: ${error.message}`);
         await enterReadOnlyMode();
     }
+}
+
+function redirectToGitHubAuth() {
+    const scope = 'repo';
+    const redirectUri = `${window.location.origin}${window.location.pathname}`;
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${config.clientId}&scope=${scope}&redirect_uri=${redirectUri}`;
+    window.location.href = authUrl;
 }
 
 function logout() {
@@ -274,7 +284,7 @@ async function loadNoteContent(token, path) {
         const response = await githubApiRequest(url, token);
         if (response.status === 404) {
             dom.markdownEditor.value = `# 新的笔记\n\n这是在 ${path} 创建的一个新文件。`;
-            dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
+            if(marked) dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
             currentFileSha = null;
             showSaveStatus('文件不存在，准备创建。');
             return;
@@ -284,7 +294,7 @@ async function loadNoteContent(token, path) {
         const content = decodeURIComponent(escape(atob(data.content)));
         currentFileSha = data.sha;
         dom.markdownEditor.value = content;
-        dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
+        if(marked) dom.htmlPreview.innerHTML = marked.parse(dom.markdownEditor.value);
         showSaveStatus('笔记加载成功！');
     } catch (error) {
         showSaveStatus(`错误: ${error.message}`);
@@ -380,17 +390,17 @@ async function createNewFolder() {
 }
 
 function showWorkspaceView() {
-    dom.workspaceView.style.display = 'grid';
+    if(dom.workspaceView) dom.workspaceView.style.display = 'grid';
 }
 
 function showWelcomeView() {
-    dom.welcomeView.style.display = 'flex';
-    dom.editorView.style.display = 'none';
+    if(dom.welcomeView) dom.welcomeView.style.display = 'flex';
+    if(dom.editorView) dom.editorView.style.display = 'none';
 }
 
 function showEditorView() {
-    dom.welcomeView.style.display = 'none';
-    dom.editorView.style.display = 'block';
+    if(dom.welcomeView) dom.welcomeView.style.display = 'none';
+    if(dom.editorView) dom.editorView.style.display = 'block';
 }
 
 function showSaveStatus(message) {
