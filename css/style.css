@@ -25,6 +25,7 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
+    background-attachment: fixed;
 }
 
 .page-content {

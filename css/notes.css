@@ -51,7 +51,7 @@
 }
 
 .notes-container {
-    max-width: 95%;
+    max-width: 100%;
     margin: 2rem auto;
     padding: 0 1rem;
     position: relative;
@@ -61,12 +61,14 @@
 /* New Workspace Layout */
 .workspace-container {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto 1fr; /* Changed from columns to rows */
     gap: 1.5rem;
-    height: 80vh;
+    min-height: 80vh; /* Changed from height to min-height */
+    width: 100%;
 }
 
-/* File Navigator (Left Sidebar) */
+
+/* File Navigator (Now Top Bar) */
 .file-navigator {
     background: rgba(26, 26, 26, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -74,7 +76,8 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    max-height: 30vh; /* Limit height */
+    overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
 .navigator-header {
@@ -146,6 +149,22 @@
     width: 20px;
     text-align: center;
 }
+
+/* Sub-folder styling */
+.file-tree ul ul {
+    display: none; /* Keep sub-folders hidden by default */
+    width: 100%;
+    margin-top: 0.75rem;
+    padding-left: 1rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.file-tree li[data-type="folder"].open > ul {
+    display: flex; /* Show children as a flex container */
+}
+
 
 /* Editor Container (Right Side) */
 .editor-container {
@@ -341,6 +360,35 @@
 
 .editor-panels.view-mode-preview #markdown-editor {
     display: none;
+}
+.editor-panels.view-mode-preview #html-preview {
+    display: block;
+    width: 100%; /* Take full width in preview mode */
+}
+
+/* --- Sticky Footer Solution --- */
+html {
+    height: 100%;
+}
+
+body.page-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main.notes-container {
+    flex-grow: 1;
+    display: flex;
+    /* padding: 1% 10%; */ /* Removing this to allow full width */
+    padding: 1rem;
+    margin: 0;
+}
+
+.workspace-container {
+    width: 100%;
+    margin-right: 5%;
+    margin-left: 5%;
 }
 
 /* --- Markdown Preview Styles --- */

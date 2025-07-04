@@ -241,8 +241,18 @@ function buildTree(pathList) {
 }
 
 function renderTree(nodes, parentElement) {
-    parentElement.innerHTML = '';
-    const ul = document.createElement('ul');
+    // If the parent element is not a UL, create one.
+    // This handles the initial call where parentElement is a div.
+    let ul;
+    if (parentElement.tagName !== 'UL') {
+        parentElement.innerHTML = '';
+        ul = document.createElement('ul');
+        parentElement.appendChild(ul);
+    } else {
+        ul = parentElement;
+        ul.innerHTML = ''; // Clear existing items before re-rendering
+    }
+
     nodes.sort((a, b) => {
         if (a.type === 'folder' && b.type === 'file') return -1;
         if (a.type === 'file' && b.type === 'folder') return 1;
@@ -266,9 +276,27 @@ function renderTree(nodes, parentElement) {
             li.appendChild(childrenUl);
             li.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const isVisible = childrenUl.style.display !== 'none';
-                childrenUl.style.display = isVisible ? 'none' : 'block';
-                icon.className = `icon fas ${isVisible ? 'fa-folder' : 'fa-folder-open'}`;
+                
+                const wasOpen = childrenUl.style.display !== 'none';
+
+                // 获取并关闭所有同级文件夹
+                const parentUl = li.parentElement;
+                parentUl.querySelectorAll(':scope > li[data-type="folder"]').forEach(siblingLi => {
+                    const siblingChildUl = siblingLi.querySelector('ul');
+                    if (siblingChildUl) {
+                        siblingChildUl.style.display = 'none';
+                    }
+                    const siblingIcon = siblingLi.querySelector('.icon');
+                    if (siblingIcon && siblingIcon.classList.contains('fa-folder-open')) {
+                        siblingIcon.classList.replace('fa-folder-open', 'fa-folder');
+                    }
+                });
+
+                // 如果点击的文件夹是关闭的，则展开它
+                if (!wasOpen) {
+                    childrenUl.style.display = 'block';
+                    icon.classList.replace('fa-folder', 'fa-folder-open');
+                }
             });
         } else {
             li.addEventListener('click', (e) => {
@@ -282,7 +310,7 @@ function renderTree(nodes, parentElement) {
         }
         ul.appendChild(li);
     });
-    parentElement.appendChild(ul);
+    // No need to append ul again, as we are directly working with it.
 }
 
 async function loadNoteContent(token, path) {
