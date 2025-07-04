@@ -13,6 +13,7 @@ let currentFilePath = null;
 
 const dom = {
     loginBtn: document.getElementById('login-btn'),
+    logoutBtn: document.getElementById('logout-btn'),
     userInfo: document.getElementById('user-info'),
     userAvatar: document.getElementById('user-avatar'),
     userName: document.getElementById('user-name'),
