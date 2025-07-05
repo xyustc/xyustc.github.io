@@ -10,7 +10,7 @@ const config = {
 
 let currentFileSha = null;
 let currentFilePath = null;
-const md = window.markdownit();
+const md = window.markdownit({ html: true });
 
 const dom = {
     loginBtn: document.getElementById('login-btn'),
@@ -381,26 +381,46 @@ async function createNewNote() {
         alert("无效的文件名。必须以 .md 结尾。");
         return;
     }
-    const path = `notes/${fileName}`;
+
+    const activeFolderPath = getActiveFolderPath();
+    const path = activeFolderPath ? `${activeFolderPath}/${fileName}` : `notes/${fileName}`;
+    
     const token = localStorage.getItem('github_access_token');
-    const content = `# ${fileName}\n\n`;
+    if (!token) {
+        alert('请先登录。');
+        return;
+    }
+
+    const content = `# ${fileName.replace('.md', '')}\n\n`;
     const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
     const url = `https://api.github.com/repos/${config.repoOwner}/${config.repoName}/contents/${path}`;
+
     try {
-        showSaveStatus(`正在创建新笔记 ${fileName}...`);
+        showSaveStatus(`正在创建新笔记: ${fileName}...`);
         const response = await githubApiRequest(url, token, {
             method: 'PUT',
             body: JSON.stringify({
-                message: `feat: create note ${fileName}`,
+                message: `feat: create new note ${path}`,
                 content: encodedContent
             })
         });
-        if (response.status === 422) throw new Error(`文件 "${fileName}" 已存在。`);
-        if (!response.ok) throw new Error(`创建失败: ${response.statusText}`);
-        showSaveStatus(`笔记 ${fileName} 创建成功！`);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`创建文件失败: ${errorData.message}`);
+        }
+
+        const data = await response.json();
+        showSaveStatus(`笔记 '${fileName}' 已成功创建！`);
+        
+        // 刷新文件树并加载新笔记
         await loadAndRenderFileTree(token);
+        loadNoteContent(token, path);
+
     } catch (error) {
-        alert(`错误: ${error.message}`);
+        showSaveStatus(`错误: ${error.message}`);
+        console.error('Create note error:', error);
     }
 }
 
