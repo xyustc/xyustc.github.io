@@ -42,12 +42,15 @@
             </div>
             
             <!-- 行动按钮区 -->
-            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
-                <a href="#skills" class="btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #64ffda, #4ecdc4); color: #0a0a0a; font-weight: 600; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(100,255,218,0.3);">
-                    <i class="fas fa-code"></i> 查看我的技能
+            <div class="hero-actions">
+                <a href="#skills" class="btn-hero btn-hero--filled" aria-label="查看我的技能">
+                    <i class="fas fa-code" aria-hidden="true"></i> 查看技能
                 </a>
-                <a href="about.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: transparent; border: 2px solid #ff6b6b; color: #ff6b6b; font-weight: 600; text-decoration: none; border-radius: 25px; transition: all 0.3s ease;">
-                    <i class="fas fa-user"></i> 了解更多
+                <a href="about.html" class="btn-hero btn-hero--filled" aria-label="了解更多关于我">
+                    <i class="fas fa-user" aria-hidden="true"></i> 了解更多
+                </a>
+                <a href="notes.html" class="btn-hero btn-hero--filled" aria-label="进入在线笔记">
+                    <i class="fas fa-book" aria-hidden="true"></i> 在线笔记
                 </a>
             </div>
             
@@ -65,6 +68,10 @@
                     </a>
                     <a href="#contact" style="color: #888; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-envelope"></i> 联系我
+                    </a>
+                    <!-- 新增快速导航：笔记 -->
+                    <a href="notes.html" style="color: #888; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-book"></i> 笔记
                     </a>
                 </div>
             </div>

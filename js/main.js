@@ -455,6 +455,8 @@ function showEmailOptions(options) {
     `;
     
     document.body.appendChild(modal);
+    // 不再锁定 body 滚动，避免用户看不到弹窗时无法滚动
+    // document.body.classList.add('modal-open');
     
     // 绑定事件
     modal.querySelectorAll('.email-option-btn').forEach(btn => {
@@ -465,10 +467,14 @@ function showEmailOptions(options) {
         });
     });
     
-    modal.querySelector('.email-modal-close').addEventListener('click', () => modal.remove());
+    modal.querySelector('.email-modal-close').addEventListener('click', () => { modal.remove(); });
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+        if (e.target === modal) { modal.remove(); }
     });
+    // ESC 关闭
+    const escListener = (e) => { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', escListener); } };
+    document.addEventListener('keydown', escListener);
+    // 由于使用 overlay flex 居中，不再需要 JS 动态定位
     
     // 显示动画
     setTimeout(() => modal.classList.add('show'), 10);

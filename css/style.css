@@ -32,7 +32,6 @@ body {
     scroll-margin-top: 0;
     min-height: 100vh;
     opacity: 0;
-    transform: translateY(20px);
     animation: fadeInUp 0.6s ease forwards;
     animation-delay: 0.2s;
 }
@@ -113,6 +112,107 @@ body {
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(100,255,218,0.4);
+}
+
+/* 主页行动按钮统一样式 */
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* 基础按钮结构 */
+.btn-hero {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 170px;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 主按钮（技能） */
+.btn-hero--primary {
+    background: linear-gradient(135deg, #64ffda, #4ecdc4);
+    color: #0a0a0a;
+    box-shadow: 0 4px 15px rgba(100,255,218,0.3);
+    border: none;
+}
+.btn-hero--primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(100,255,218,0.45);
+}
+
+/* 描边次级（了解更多） 已存在 */
+
+/* 强调按钮（在线笔记） */
+.btn-hero--accent {
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    color: #0a0a0a;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255,159,67,0.35);
+}
+.btn-hero--accent:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255,159,67,0.55);
+}
+
+/* 统一填充风格（替代描边：更饱满） */
+.btn-hero--filled {
+    background: linear-gradient(135deg, #64ffda 0%, #4ecdc4 40%, #ff6b6b 100%);
+    color: #0b0f12;
+    border: none;
+    box-shadow: 0 4px 18px rgba(100,255,218,0.25), 0 2px 4px rgba(0,0,0,0.4);
+}
+.btn-hero--filled::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 25px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%);
+    mix-blend-mode: overlay;
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity .4s ease;
+}
+.btn-hero--filled:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 28px rgba(100,255,218,0.35), 0 4px 10px rgba(0,0,0,0.5);
+}
+.btn-hero--filled:hover::after { opacity: 0.8; }
+.btn-hero--filled:active { transform: translateY(-1px) scale(.995); }
+.btn-hero--filled:focus-visible { outline: 2px solid #64ffda; outline-offset: 3px; }
+
+/* 可选强调：当前选中或聚焦状态 */
+.btn-hero:focus-visible {
+    outline: 2px solid #64ffda;
+    outline-offset: 3px;
+}
+
+/* 英雄按钮层次：描边次级样式 */
+.btn-hero--outline {
+    background: transparent;
+    color: #ff6b6b;
+    border: 2px solid #ff6b6b;
+    box-shadow: none;
+}
+
+.btn-hero--outline:hover {
+    background: rgba(255,107,107,0.12);
+    box-shadow: 0 4px 18px rgba(255,107,107,0.35);
+    color: #ff6b6b;
+}
+
+.btn-hero--outline:focus-visible {
+    outline: 2px solid #ff6b6b;
 }
 
 /* 内容区块 */
@@ -297,9 +397,13 @@ footer {
 }
 
 @keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: none;
     }
 }
 
@@ -326,20 +430,28 @@ footer {
 }
 
 .email-modal-content {
+    /* 改为相对定位并依赖父容器 flex 居中，避免在长页面滚动后仍按整页高度计算 */
+    position: relative;
+    transform: scale(0.85);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 2rem;
     max-width: 400px;
-    width: 90%;
+    width: min(90%, 400px);
     text-align: center;
-    transform: scale(0.8);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .email-modal.show .email-modal-content {
     transform: scale(1);
+}
+
+body.modal-open {
+    overflow: hidden;
+    padding-right: 0; /* 简单处理滚动条补偿，可按需添加 */
 }
 
 .email-modal h3 {
